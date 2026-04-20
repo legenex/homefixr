@@ -1,7 +1,8 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { User, Mail, Phone } from "lucide-react";
+import { Phone, Mail, User, Clock } from "lucide-react";
+import OptionCard from "./OptionCard";
 
 const TIMES = [
   { value: "morning", label: "Morning (8am–12pm)" },
@@ -16,95 +17,84 @@ export default function ContactForm({ data, onChange, errors = {} }) {
   return (
     <div className="space-y-5 max-w-lg">
       {/* Name */}
-      <div className="relative">
-        <Label htmlFor="full_name" className="text-sm font-semibold mb-2 block">
-          Full name <span className="text-destructive">*</span>
+      <div>
+        <Label htmlFor="full_name" className="text-sm font-semibold mb-2 flex items-center gap-2">
+          <User className="w-4 h-4 text-secondary" /> Full name
         </Label>
-        <div className="relative">
-          <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            id="full_name"
-            value={data.full_name || ""}
-            onChange={(e) => set("full_name", e.target.value)}
-            placeholder="Jane Smith"
-            className={`h-13 text-base rounded-xl pl-10 ${errors.full_name ? "border-destructive" : ""}`}
-            style={{ height: 52 }}
-          />
-        </div>
-        {errors.full_name && <p className="text-xs text-destructive mt-1.5">{errors.full_name}</p>}
+        <Input
+          id="full_name"
+          value={data.full_name || ""}
+          onChange={(e) => set("full_name", e.target.value)}
+          placeholder="Jane Smith"
+          className={`h-13 text-base rounded-xl border-2 transition-colors ${errors.full_name ? "border-destructive" : "border-border focus:border-secondary"}`}
+          style={{ height: 52 }}
+          autoComplete="name"
+        />
+        {errors.full_name && <p className="text-xs text-destructive mt-1.5 flex items-center gap-1">⚠ {errors.full_name}</p>}
       </div>
 
-      {/* Email + Phone side by side on larger screens */}
-      <div className="grid sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="email" className="text-sm font-semibold mb-2 block">
-            Email address <span className="text-destructive">*</span>
-          </Label>
-          <div className="relative">
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="email"
-              type="email"
-              inputMode="email"
-              value={data.email || ""}
-              onChange={(e) => set("email", e.target.value)}
-              placeholder="jane@example.com"
-              className={`text-base rounded-xl pl-10 ${errors.email ? "border-destructive" : ""}`}
-              style={{ height: 52 }}
-            />
-          </div>
-          {errors.email && <p className="text-xs text-destructive mt-1.5">{errors.email}</p>}
-        </div>
+      {/* Email */}
+      <div>
+        <Label htmlFor="email" className="text-sm font-semibold mb-2 flex items-center gap-2">
+          <Mail className="w-4 h-4 text-secondary" /> Email address
+        </Label>
+        <Input
+          id="email"
+          type="email"
+          inputMode="email"
+          value={data.email || ""}
+          onChange={(e) => set("email", e.target.value)}
+          placeholder="jane@example.com"
+          className={`h-13 text-base rounded-xl border-2 transition-colors ${errors.email ? "border-destructive" : "border-border focus:border-secondary"}`}
+          style={{ height: 52 }}
+          autoComplete="email"
+        />
+        {errors.email && <p className="text-xs text-destructive mt-1.5 flex items-center gap-1">⚠ {errors.email}</p>}
+      </div>
 
-        <div>
-          <Label htmlFor="phone" className="text-sm font-semibold mb-2 block">
-            Phone number <span className="text-destructive">*</span>
-          </Label>
-          <div className="relative">
-            <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              id="phone"
-              type="tel"
-              inputMode="tel"
-              value={data.phone || ""}
-              onChange={(e) => set("phone", e.target.value)}
-              placeholder="(555) 123-4567"
-              className={`text-base rounded-xl pl-10 ${errors.phone ? "border-destructive" : ""}`}
-              style={{ height: 52 }}
-            />
-          </div>
-          {errors.phone && <p className="text-xs text-destructive mt-1.5">{errors.phone}</p>}
-        </div>
+      {/* Phone */}
+      <div>
+        <Label htmlFor="phone" className="text-sm font-semibold mb-2 flex items-center gap-2">
+          <Phone className="w-4 h-4 text-secondary" /> Phone number
+        </Label>
+        <Input
+          id="phone"
+          type="tel"
+          inputMode="tel"
+          value={data.phone || ""}
+          onChange={(e) => set("phone", e.target.value)}
+          placeholder="(555) 123-4567"
+          className={`h-13 text-base rounded-xl border-2 transition-colors ${errors.phone ? "border-destructive" : "border-border focus:border-secondary"}`}
+          style={{ height: 52 }}
+          autoComplete="tel"
+        />
+        {errors.phone && <p className="text-xs text-destructive mt-1.5 flex items-center gap-1">⚠ {errors.phone}</p>}
       </div>
 
       {/* Best time */}
       <div>
-        <Label className="text-sm font-semibold mb-3 block">Best time to reach you</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <Label className="text-sm font-semibold mb-2 flex items-center gap-2">
+          <Clock className="w-4 h-4 text-secondary" /> Best time to call
+        </Label>
+        <div className="grid sm:grid-cols-2 gap-2.5">
           {TIMES.map(t => (
-            <button
+            <OptionCard
               key={t.value}
-              type="button"
+              label={t.label}
+              selected={data.best_time === t.value}
               onClick={() => set("best_time", t.value)}
-              className={`px-4 py-3 rounded-xl border-2 text-sm font-medium text-left transition-all ${
-                data.best_time === t.value
-                  ? "border-secondary bg-secondary/5 text-foreground"
-                  : "border-border text-muted-foreground hover:border-secondary/40"
-              }`}
-            >
-              {t.label}
-            </button>
+            />
           ))}
         </div>
       </div>
 
       {/* TCPA */}
-      <div className="flex items-start gap-3 p-4 rounded-xl bg-muted/60 border border-border">
+      <div className={`flex items-start gap-3 p-4 rounded-xl border ${errors.tcpa_consent ? "bg-destructive/5 border-destructive/30" : "bg-muted/60 border-border"}`}>
         <Checkbox
           id="tcpa"
           checked={!!data.tcpa_consent}
           onCheckedChange={(v) => set("tcpa_consent", !!v)}
-          className="mt-0.5 flex-shrink-0"
+          className="mt-0.5"
         />
         <label htmlFor="tcpa" className="text-xs leading-relaxed text-muted-foreground cursor-pointer">
           By checking this box and clicking "Submit", I consent to HomeFixr and its matched service pros contacting me at the phone number provided, including by autodialed, pre-recorded, or artificial voice calls and text messages, about my project. Consent is not a condition of purchase. Msg & data rates may apply. See our{" "}
@@ -112,7 +102,7 @@ export default function ContactForm({ data, onChange, errors = {} }) {
           <a href="/privacy" target="_blank" className="underline text-foreground">Privacy Policy</a>.
         </label>
       </div>
-      {errors.tcpa_consent && <p className="text-xs text-destructive">{errors.tcpa_consent}</p>}
+      {errors.tcpa_consent && <p className="text-xs text-destructive flex items-center gap-1">⚠ {errors.tcpa_consent}</p>}
     </div>
   );
 }

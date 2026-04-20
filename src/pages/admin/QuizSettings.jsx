@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   Sliders, Save, CheckCircle2, Plus, Trash2, GripVertical,
-  ChevronDown, ChevronRight, Type, List, ToggleLeft, AlignLeft
+  ChevronDown, ChevronRight, List, ToggleLeft, AlignLeft
 } from "lucide-react";
 import { SERVICES_LIST } from "@/lib/servicesData";
 import { Input } from "@/components/ui/input";
