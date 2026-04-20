@@ -36,6 +36,12 @@
     "zip_code": {
       "type": "string"
     },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
     "service_details": {
       "type": "object",
       "description": "Service-specific answers",
@@ -77,6 +83,9 @@
         "closed"
       ],
       "default": "new"
+    },
+    "notes": {
+      "type": "string"
     }
   },
   "required": [

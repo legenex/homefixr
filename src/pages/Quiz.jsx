@@ -3,8 +3,6 @@ import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { base44 } from "@/api/base44Client";
 
 import Logo from "@/components/layout/Logo";
@@ -16,6 +14,7 @@ import ContactForm from "@/components/quiz/ContactForm";
 
 import { SERVICES_LIST, getService } from "@/lib/servicesData";
 import { qualifyLead } from "@/lib/qualify";
+import ZipStep from "@/components/quiz/ZipStep";
 
 const TIMELINES = [
   { value: "asap", label: "ASAP — as soon as possible" },
@@ -43,6 +42,8 @@ export default function Quiz() {
     timeline: "",
     budget: "",
     zip_code: "",
+    city: "",
+    state: "",
     service_details: {},
     full_name: "",
     email: "",
@@ -83,7 +84,7 @@ export default function Quiz() {
       case "is_residential": return data.is_residential !== null;
       case "timeline": return !!data.timeline;
       case "budget": return !!data.budget;
-      case "zip_code": return /^\d{5}$/.test(data.zip_code);
+      case "zip_code": return /^\d{5}$/.test(data.zip_code) && !!data.city;
       case "contact": return true; // validated on submit
       default:
         if (currentKey?.startsWith("sq_")) {
@@ -214,25 +215,7 @@ export default function Quiz() {
     }
 
     if (currentKey === "zip_code") {
-      return (
-        <QuizStepWrapper title="What's your ZIP code?" subtitle="We'll match you with pros local to your area.">
-          <div className="max-w-xs">
-            <Label htmlFor="zip" className="text-sm font-medium mb-2 block">ZIP code</Label>
-            <Input
-              id="zip"
-              inputMode="numeric"
-              maxLength={5}
-              value={data.zip_code}
-              onChange={(e) => setField("zip_code", e.target.value.replace(/\D/g, "").slice(0, 5))}
-              placeholder="12345"
-              className="h-14 text-2xl font-semibold tracking-widest text-center rounded-xl"
-            />
-            {data.zip_code && !/^\d{5}$/.test(data.zip_code) && (
-              <p className="text-xs text-muted-foreground mt-2">Enter 5 digits</p>
-            )}
-          </div>
-        </QuizStepWrapper>
-      );
+      return <ZipStep data={data} setData={setData} />;
     }
 
     if (currentKey?.startsWith("sq_")) {
