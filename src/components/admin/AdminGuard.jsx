@@ -23,7 +23,13 @@ export default function AdminGuard() {
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user) {
+    // Not logged in — redirect to login, then come back to /admin
+    base44.auth.redirectToLogin("/admin");
+    return null;
+  }
+
+  if (user.role !== "admin") {
     return (
       <div className="min-h-screen bg-[#0f1623] flex items-center justify-center">
         <div className="text-center text-white">
@@ -31,7 +37,7 @@ export default function AdminGuard() {
             <ShieldAlert className="w-8 h-8 text-red-400" />
           </div>
           <h1 className="text-2xl font-semibold mb-2">Access Denied</h1>
-          <p className="text-white/50 mb-6">Admin access required to view this page.</p>
+          <p className="text-white/50 mb-6">Your account doesn't have admin access.</p>
           <a href="/" className="text-secondary hover:underline text-sm">← Back to site</a>
         </div>
       </div>
