@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useLocation, Outlet } from "react-router-dom";
 import {
-  LayoutDashboard, Users, FileText, Settings, Search,
-  Sliders, Plug, ChevronRight, Menu, X, LogOut, Wrench,
-  BarChart2, MessageSquare, Globe, ShieldAlert
+  LayoutDashboard, Users, Settings,
+  Sliders, Plug, ChevronRight, Menu, LogOut,
+  BarChart2, MessageSquare, Globe, Share2
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/layout/Logo";
@@ -11,6 +11,7 @@ import Logo from "@/components/layout/Logo";
 const NAV = [
   { label: "Dashboard", icon: LayoutDashboard, to: "/admin" },
   { label: "Leads", icon: MessageSquare, to: "/admin/leads" },
+  { label: "Distribution", icon: Share2, to: "/admin/distribution" },
   { label: "Users", icon: Users, to: "/admin/users" },
   { label: "Quiz Settings", icon: Sliders, to: "/admin/quiz" },
   { label: "Pages & SEO", icon: Globe, to: "/admin/pages" },

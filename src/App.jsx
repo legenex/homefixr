@@ -22,6 +22,7 @@ import PagesAndSEO from '@/pages/admin/PagesAndSEO';
 import Integrations from '@/pages/admin/Integrations';
 import AdminAnalytics from '@/pages/admin/Analytics';
 import AdminSettings from '@/pages/admin/AdminSettings';
+import Distribution from '@/pages/admin/Distribution';
 import { Privacy, Terms, TCPA } from '@/pages/Legal';
 
 const AuthenticatedApp = () => {
@@ -59,6 +60,7 @@ const AuthenticatedApp = () => {
         <Route path="/admin/integrations" element={<Integrations />} />
         <Route path="/admin/analytics" element={<AdminAnalytics />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
+        <Route path="/admin/distribution" element={<Distribution />} />
       </Route>
 
       {/* Public site — uses main Navbar + Footer Layout */}

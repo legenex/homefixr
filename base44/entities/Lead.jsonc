@@ -86,6 +86,33 @@
     },
     "notes": {
       "type": "string"
+    },
+    "sale_status": {
+      "type": "string",
+      "enum": [
+        "unsold",
+        "sold",
+        "returned"
+      ],
+      "default": "unsold"
+    },
+    "sold_buyer_id": {
+      "type": "string",
+      "description": "buyer_id of the buyer this lead was sold to"
+    },
+    "sold_buyer_name": {
+      "type": "string"
+    },
+    "sale_price": {
+      "type": "number"
+    },
+    "delivery_id": {
+      "type": "string",
+      "description": "BuyerDelivery id used for sale"
+    },
+    "sold_at": {
+      "type": "string",
+      "format": "date-time"
     }
   },
   "required": [

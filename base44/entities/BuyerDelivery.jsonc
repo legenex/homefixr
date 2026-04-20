@@ -1,0 +1,94 @@
+{
+  "name": "BuyerDelivery",
+  "type": "object",
+  "properties": {
+    "buyer_id": {
+      "type": "string",
+      "description": "Reference to Buyer.buyer_id"
+    },
+    "campaign_id": {
+      "type": "string",
+      "description": "Reference to Campaign entity id"
+    },
+    "name": {
+      "type": "string"
+    },
+    "delivery_type": {
+      "type": "string",
+      "enum": [
+        "webhook",
+        "email",
+        "api",
+        "manual"
+      ],
+      "default": "webhook"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused"
+      ],
+      "default": "active"
+    },
+    "price": {
+      "type": "number"
+    },
+    "webhook_url": {
+      "type": "string"
+    },
+    "webhook_method": {
+      "type": "string",
+      "enum": [
+        "POST",
+        "GET"
+      ],
+      "default": "POST"
+    },
+    "webhook_headers": {
+      "type": "string",
+      "description": "JSON string of custom headers"
+    },
+    "webhook_payload_template": {
+      "type": "string",
+      "description": "Custom payload template with field mappings"
+    },
+    "filters": {
+      "type": "object",
+      "description": "Filter rules",
+      "additionalProperties": true
+    },
+    "allowed_states": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allowed_zips": {
+      "type": "string",
+      "description": "Comma-separated ZIP codes or prefixes"
+    },
+    "allowed_verticals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "daily_cap": {
+      "type": "number"
+    },
+    "monthly_cap": {
+      "type": "number"
+    },
+    "priority": {
+      "type": "number",
+      "default": 1,
+      "description": "Lower = higher priority"
+    }
+  },
+  "required": [
+    "buyer_id",
+    "campaign_id",
+    "name"
+  ]
+}

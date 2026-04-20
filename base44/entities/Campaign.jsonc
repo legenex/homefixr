@@ -1,0 +1,46 @@
+{
+  "name": "Campaign",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "vertical": {
+      "type": "string",
+      "enum": [
+        "kitchen-remodeling",
+        "bathroom-remodeling",
+        "flooring",
+        "roofing",
+        "home-improvement",
+        "electrical",
+        "plumbing"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "archived"
+      ],
+      "default": "active"
+    },
+    "description": {
+      "type": "string"
+    },
+    "default_price": {
+      "type": "number"
+    },
+    "daily_cap": {
+      "type": "number"
+    },
+    "monthly_cap": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name",
+    "vertical"
+  ]
+}

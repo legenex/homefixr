@@ -3,13 +3,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
 import {
-  CheckCircle2, XCircle, Mail, Phone, MapPin, Download,
-  Eye, X, Edit2, Save, Clock, User
+  CheckCircle2, XCircle, Mail, MapPin, Download,
+  Eye, X, Edit2, Save, DollarSign, RotateCcw, ShoppingCart
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SERVICES_LIST, getService } from "@/lib/servicesData";
+import SellManuallyModal from "@/components/distribution/SellManuallyModal";
 
 const STATUS_COLORS = {
   new: "bg-blue-500/10 text-blue-300 border-blue-500/20",
@@ -27,11 +28,14 @@ export default function AdminLeads() {
   const [dateFilter, setDateFilter] = useState("all");
   const [viewingLead, setViewingLead] = useState(null);
   const [editingLead, setEditingLead] = useState(null);
+  const [sellModal, setSellModal] = useState(null); // lead to sell manually
 
   const { data: leads = [], isLoading } = useQuery({
     queryKey: ["admin-leads"],
     queryFn: () => base44.entities.Lead.list("-created_date", 500),
   });
+
+  const { data: buyers = [] } = useQuery({ queryKey: ["buyers"], queryFn: () => base44.entities.Buyer.list() });
 
   const updateLead = useMutation({
     mutationFn: ({ id, data }) => base44.entities.Lead.update(id, data),
@@ -130,11 +134,13 @@ export default function AdminLeads() {
       {/* Table */}
       <div className="bg-white/5 rounded-2xl border border-white/8 overflow-hidden">
         {/* Table header */}
-        <div className="hidden md:grid grid-cols-[1fr_140px_120px_100px_80px] gap-4 px-5 py-3 border-b border-white/8 text-xs font-semibold uppercase tracking-wider text-white/30">
+        <div className="hidden md:grid grid-cols-[1fr_120px_110px_90px_90px_80px_60px] gap-3 px-5 py-3 border-b border-white/8 text-xs font-semibold uppercase tracking-wider text-white/30">
           <span>Lead</span>
           <span>Location</span>
           <span>Qualification</span>
-          <span>Status</span>
+          <span>Sale</span>
+          <span>Buyer</span>
+          <span>Price</span>
           <span></span>
         </div>
 
@@ -145,7 +151,7 @@ export default function AdminLeads() {
         ) : (
           <div className="divide-y divide-white/5">
             {filtered.map(lead => (
-              <div key={lead.id} className="grid md:grid-cols-[1fr_140px_120px_100px_80px] gap-4 px-5 py-4 items-center hover:bg-white/3 transition-colors">
+              <div key={lead.id} className="grid md:grid-cols-[1fr_120px_110px_90px_90px_80px_60px] gap-3 px-5 py-4 items-center hover:bg-white/3 transition-colors">
                 {/* Name + service */}
                 <div>
                   <p className="text-sm font-medium text-white">{lead.full_name}</p>
@@ -163,30 +169,35 @@ export default function AdminLeads() {
                 {/* Qualification badge */}
                 <div>
                   {lead.qualified ? (
-                    <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20 font-medium">
+                    <span className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full bg-secondary/10 text-secondary border border-secondary/20 font-medium">
                       <CheckCircle2 className="w-3 h-3" /> Qualified
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-white/5 text-white/40 border border-white/10 font-medium">
-                      <XCircle className="w-3 h-3" /> Disqualified
+                    <span className="inline-flex items-center gap-1.5 text-xs px-2 py-1 rounded-full bg-white/5 text-white/40 border border-white/10 font-medium">
+                      <XCircle className="w-3 h-3" /> Disqual.
                     </span>
                   )}
                 </div>
-                {/* Status */}
+                {/* Sale status */}
                 <div>
-                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium border capitalize ${STATUS_COLORS[lead.status] || STATUS_COLORS.new}`}>
-                    {lead.status || "new"}
-                  </span>
+                  {lead.sale_status === "sold" ? (
+                    <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 font-medium">Sold</span>
+                  ) : lead.sale_status === "returned" ? (
+                    <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-red-500/10 text-red-400 border border-red-500/20 font-medium">Returned</span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-full bg-white/5 text-white/30 border border-white/10 font-medium">Unsold</span>
+                  )}
                 </div>
+                {/* Buyer */}
+                <div className="text-xs font-mono text-white/50">{lead.sold_buyer_id || "—"}</div>
+                {/* Price */}
+                <div className="text-xs text-white/60">{lead.sale_price ? <span className="text-green-400 font-medium">${lead.sale_price}</span> : "—"}</div>
                 {/* Actions */}
-                <div className="flex items-center gap-2 justify-end">
-                  <button
-                    onClick={() => openView(lead)}
-                    className="p-1.5 rounded-lg hover:bg-white/10 text-white/30 hover:text-white transition-colors"
-                    title="View"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
+                <div className="flex items-center gap-1 justify-end">
+                  <button onClick={() => openView(lead)} className="p-1.5 rounded-lg hover:bg-white/10 text-white/30 hover:text-white transition-colors" title="View"><Eye className="w-3.5 h-3.5" /></button>
+                  {lead.sale_status !== "sold" && (
+                    <button onClick={() => setSellModal(lead)} className="p-1.5 rounded-lg hover:bg-green-500/10 text-white/20 hover:text-green-400 transition-colors" title="Sell manually"><ShoppingCart className="w-3.5 h-3.5" /></button>
+                  )}
                 </div>
               </div>
             ))}
@@ -194,17 +205,28 @@ export default function AdminLeads() {
         )}
       </div>
 
+      {/* Sell manually modal */}
+      {sellModal && (
+        <SellManuallyModal
+          lead={sellModal}
+          buyers={buyers}
+          onSell={(patch) => { updateLead.mutate({ id: sellModal.id, data: patch }); setSellModal(null); }}
+          onClose={() => setSellModal(null)}
+        />
+      )}
+
       {/* Lead detail modal */}
       {viewingLead && (
         <LeadModal
           lead={editingLead || viewingLead}
+          viewingLead={viewingLead}
           isEditing={!!editingLead}
           isSaving={updateLead.isPending}
           onEdit={() => setEditingLead({ ...viewingLead })}
           onSave={saveEdit}
           onCancelEdit={() => setEditingLead(null)}
           onChange={patch => setEditingLead(e => ({ ...e, ...patch }))}
-          onStatusChange={(status) => updateLead.mutate({ id: viewingLead.id, data: { status } })}
+          onStatusChange={(val) => updateLead.mutate({ id: viewingLead.id, data: val === "returned" ? { sale_status: "returned" } : { status: val } })}
           onClose={() => { setViewingLead(null); setEditingLead(null); }}
         />
       )}
@@ -212,7 +234,7 @@ export default function AdminLeads() {
   );
 }
 
-function LeadModal({ lead, isEditing, isSaving, onEdit, onSave, onCancelEdit, onChange, onStatusChange, onClose }) {
+function LeadModal({ lead, isEditing, isSaving, onEdit, onSave, onCancelEdit, onChange, onStatusChange, onClose, viewingLead }) {
   const service = getService(lead.service);
 
   return (
@@ -302,6 +324,34 @@ function LeadModal({ lead, isEditing, isSaving, onEdit, onSave, onCancelEdit, on
               </div>
             )}
           </Section>
+
+          {/* Sale info */}
+          {viewingLead?.sale_status === "sold" && (
+            <Section title="Sale details">
+              <div className="flex flex-wrap items-center gap-4">
+                <div>
+                  <p className="text-xs text-white/30 mb-1">Buyer ID</p>
+                  <p className="text-sm text-white font-mono">{lead.sold_buyer_id || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-white/30 mb-1">Sale price</p>
+                  {isEditing ? (
+                    <Input type="number" value={lead.sale_price || ""} onChange={e => onChange({ sale_price: parseFloat(e.target.value) || 0 })} className="bg-white/5 border-white/10 text-white rounded-lg h-9 w-28 text-sm" />
+                  ) : (
+                    <p className="text-sm text-green-400 font-medium">${lead.sale_price || 0}</p>
+                  )}
+                </div>
+                {!isEditing && (
+                  <button
+                    onClick={() => onStatusChange("returned")}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs bg-red-500/10 text-red-400 border border-red-500/20 rounded-lg hover:bg-red-500/20 mt-4"
+                  >
+                    <RotateCcw className="w-3 h-3" /> Return lead
+                  </button>
+                )}
+              </div>
+            </Section>
+          )}
 
           {/* Status */}
           <Section title="Lead status">
