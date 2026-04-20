@@ -98,6 +98,17 @@ export default function Quiz() {
     }
   };
 
+  // Steps where user must explicitly press Continue (multi-select, text input, zip, contact)
+  const isManualStep = () => {
+    if (currentKey === "zip_code" || currentKey === "contact") return true;
+    if (currentKey?.startsWith("sq_")) {
+      const qid = currentKey.slice(3);
+      const q = serviceQuestions.find(q => q.id === qid);
+      return q?.type === "multi" || q?.type === "text";
+    }
+    return false;
+  };
+
   const next = () => {
     if (!canProceed()) return;
     if (step < totalSteps - 1) setStep(s => s + 1);
@@ -106,6 +117,14 @@ export default function Quiz() {
   const back = () => {
     if (step > 0) setStep(s => s - 1);
     else navigate("/");
+  };
+
+  // Auto-advance after a single-select pick (with tiny delay for visual feedback)
+  const pickAndAdvance = (setFn) => {
+    setFn();
+    setTimeout(() => {
+      setStep(s => s < totalSteps - 1 ? s + 1 : s);
+    }, 180);
   };
 
   const validateContact = () => {
@@ -149,7 +168,7 @@ export default function Quiz() {
               label={s.name}
               icon={s.icon}
               selected={data.service === s.slug}
-              onClick={() => { setField("service", s.slug); setData(d => ({ ...d, service_details: {} })); }}
+              onClick={() => pickAndAdvance(() => setData(d => ({ ...d, service: s.slug, service_details: {} })))}
             />
           ))}
         </QuizStepWrapper>
@@ -159,8 +178,8 @@ export default function Quiz() {
     if (currentKey === "is_homeowner") {
       return (
         <QuizStepWrapper title="Are you the homeowner?" subtitle="We only work with homeowners and authorized decision-makers.">
-          <OptionCard label="Yes, I'm the homeowner" selected={data.is_homeowner === true} onClick={() => setField("is_homeowner", true)} />
-          <OptionCard label="No, I'm not" selected={data.is_homeowner === false} onClick={() => setField("is_homeowner", false)} />
+          <OptionCard label="Yes, I'm the homeowner" selected={data.is_homeowner === true} onClick={() => pickAndAdvance(() => setField("is_homeowner", true))} />
+          <OptionCard label="No, I'm not" selected={data.is_homeowner === false} onClick={() => pickAndAdvance(() => setField("is_homeowner", false))} />
         </QuizStepWrapper>
       );
     }
@@ -168,8 +187,8 @@ export default function Quiz() {
     if (currentKey === "is_residential") {
       return (
         <QuizStepWrapper title="Is this for a residential property?" subtitle="HomeFixr serves residential projects only — not commercial or industrial.">
-          <OptionCard label="Yes, residential" selected={data.is_residential === true} onClick={() => setField("is_residential", true)} />
-          <OptionCard label="No, commercial or other" selected={data.is_residential === false} onClick={() => setField("is_residential", false)} />
+          <OptionCard label="Yes, residential" selected={data.is_residential === true} onClick={() => pickAndAdvance(() => setField("is_residential", true))} />
+          <OptionCard label="No, commercial or other" selected={data.is_residential === false} onClick={() => pickAndAdvance(() => setField("is_residential", false))} />
         </QuizStepWrapper>
       );
     }
@@ -178,7 +197,7 @@ export default function Quiz() {
       return (
         <QuizStepWrapper title="When would you like to start?" subtitle="This helps us match you with pros available on your schedule.">
           {TIMELINES.map(t => (
-            <OptionCard key={t.value} label={t.label} selected={data.timeline === t.value} onClick={() => setField("timeline", t.value)} />
+            <OptionCard key={t.value} label={t.label} selected={data.timeline === t.value} onClick={() => pickAndAdvance(() => setField("timeline", t.value))} />
           ))}
         </QuizStepWrapper>
       );
@@ -188,7 +207,7 @@ export default function Quiz() {
       return (
         <QuizStepWrapper title="What's your budget range?" subtitle="We'll only match you with pros who can work within your range — no wasted quotes.">
           {service.budgetOptions.map(b => (
-            <OptionCard key={b.value} label={b.label} selected={data.budget === b.value} onClick={() => setField("budget", b.value)} />
+            <OptionCard key={b.value} label={b.label} selected={data.budget === b.value} onClick={() => pickAndAdvance(() => setField("budget", b.value))} />
           ))}
         </QuizStepWrapper>
       );
@@ -220,12 +239,19 @@ export default function Quiz() {
       const qid = currentKey.slice(3);
       const q = serviceQuestions.find(q => q.id === qid);
       if (!q) return null;
+      const handleChange = (v) => {
+        setServiceDetail(qid, v);
+        // Auto-advance only for single-select service questions
+        if (q.type === "single") {
+          setTimeout(() => setStep(s => s < totalSteps - 1 ? s + 1 : s), 180);
+        }
+      };
       return (
         <QuizStepWrapper title={q.label} subtitle={q.type === "multi" ? "Select all that apply." : undefined}>
           <ServiceQuestion
             question={q}
             value={data.service_details[qid]}
-            onChange={(v) => setServiceDetail(qid, v)}
+            onChange={handleChange}
           />
         </QuizStepWrapper>
       );
@@ -277,19 +303,21 @@ export default function Quiz() {
           <Button variant="ghost" onClick={back} disabled={submitting} className="rounded-full">
             <ArrowLeft className="w-4 h-4 mr-1.5" /> Back
           </Button>
-          <Button
-            onClick={next}
-            disabled={!canProceed() || submitting}
-            className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full h-12 px-6 shadow-soft"
-          >
-            {submitting ? (
-              <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting...</>
-            ) : isLast ? (
-              <>Submit <ArrowRight className="w-4 h-4 ml-1.5" /></>
-            ) : (
-              <>Continue <ArrowRight className="w-4 h-4 ml-1.5" /></>
-            )}
-          </Button>
+          {(isManualStep() || isLast) && (
+            <Button
+              onClick={next}
+              disabled={!canProceed() || submitting}
+              className="bg-secondary hover:bg-secondary/90 text-secondary-foreground rounded-full h-12 px-6 shadow-soft"
+            >
+              {submitting ? (
+                <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Submitting...</>
+              ) : isLast ? (
+                <>Submit <ArrowRight className="w-4 h-4 ml-1.5" /></>
+              ) : (
+                <>Continue <ArrowRight className="w-4 h-4 ml-1.5" /></>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>
