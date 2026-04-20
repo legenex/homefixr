@@ -13,7 +13,15 @@ import ServicePage from '@/pages/ServicePage';
 import Quiz from '@/pages/Quiz';
 import ThankYou from '@/pages/ThankYou';
 import ThankYouUnmatched from '@/pages/ThankYouUnmatched';
-import Admin from '@/pages/Admin';
+import AdminGuard from '@/components/admin/AdminGuard';
+import AdminDashboard from '@/pages/admin/Dashboard';
+import AdminLeads from '@/pages/admin/Leads';
+import UsersAdmin from '@/pages/admin/UsersAdmin';
+import QuizSettings from '@/pages/admin/QuizSettings';
+import PagesAndSEO from '@/pages/admin/PagesAndSEO';
+import Integrations from '@/pages/admin/Integrations';
+import AdminAnalytics from '@/pages/admin/Analytics';
+import AdminSettings from '@/pages/admin/AdminSettings';
 import { Privacy, Terms, TCPA } from '@/pages/Legal';
 
 const AuthenticatedApp = () => {
@@ -38,17 +46,28 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      {/* Quiz is standalone (its own chrome) */}
+      {/* Quiz — standalone chrome */}
       <Route path="/quiz" element={<Quiz />} />
 
-      {/* Everything else uses the main Layout */}
+      {/* Admin — standalone with own dark layout + auth guard */}
+      <Route element={<AdminGuard />}>
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/admin/leads" element={<AdminLeads />} />
+        <Route path="/admin/users" element={<UsersAdmin />} />
+        <Route path="/admin/quiz" element={<QuizSettings />} />
+        <Route path="/admin/pages" element={<PagesAndSEO />} />
+        <Route path="/admin/integrations" element={<Integrations />} />
+        <Route path="/admin/analytics" element={<AdminAnalytics />} />
+        <Route path="/admin/settings" element={<AdminSettings />} />
+      </Route>
+
+      {/* Public site — uses main Navbar + Footer Layout */}
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/services/:slug" element={<ServicePage />} />
         <Route path="/thank-you" element={<ThankYou />} />
         <Route path="/thank-you-unmatched" element={<ThankYouUnmatched />} />
-        <Route path="/admin" element={<Admin />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/tcpa" element={<TCPA />} />
