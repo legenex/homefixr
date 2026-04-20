@@ -1,0 +1,89 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "service": {
+      "type": "string",
+      "enum": [
+        "kitchen-remodeling",
+        "bathroom-remodeling",
+        "flooring",
+        "roofing",
+        "home-improvement",
+        "electrical",
+        "plumbing"
+      ],
+      "description": "Service requested"
+    },
+    "is_homeowner": {
+      "type": "boolean"
+    },
+    "is_residential": {
+      "type": "boolean"
+    },
+    "timeline": {
+      "type": "string",
+      "enum": [
+        "asap",
+        "1-3-months",
+        "3-6-months",
+        "researching"
+      ]
+    },
+    "budget": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "service_details": {
+      "type": "object",
+      "description": "Service-specific answers",
+      "additionalProperties": true
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "best_time": {
+      "type": "string",
+      "enum": [
+        "morning",
+        "afternoon",
+        "evening",
+        "anytime"
+      ]
+    },
+    "tcpa_consent": {
+      "type": "boolean"
+    },
+    "qualified": {
+      "type": "boolean"
+    },
+    "disqualification_reason": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "contacted",
+        "matched",
+        "closed"
+      ],
+      "default": "new"
+    }
+  },
+  "required": [
+    "service",
+    "full_name",
+    "email",
+    "phone",
+    "zip_code"
+  ]
+}
