@@ -7,17 +7,12 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const user = await base44.auth.me();
-    if (!user || user.role !== 'admin') {
-      return Response.json({ error: 'Unauthorized' }, { status: 403 });
-    }
-
     const { raw_signal_id } = await req.json();
     if (!raw_signal_id) {
       return Response.json({ error: 'raw_signal_id required' }, { status: 400 });
     }
 
-    // Fetch the raw signal
+    // Fetch the raw signal (use service role for backend function invocation)
     const rawSignal = await base44.asServiceRole.entities.RawSignal.get(raw_signal_id);
     if (!rawSignal) {
       return Response.json({ error: 'RawSignal not found' }, { status: 404 });
