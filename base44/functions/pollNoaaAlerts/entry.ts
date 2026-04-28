@@ -88,17 +88,24 @@ Deno.serve(async (req) => {
             continue;
           }
 
-          // Extract geo
+          // Extract geo from title format: "Event - County, ST; County, ST; ..."
           const geometry = alert.geometry || {};
           const coordinates = geometry.coordinates || [];
           let affectedStates = [];
+          const title = `${alertType} - ${props.areaDesc || 'Active'}`;
           try {
+            // Extract state codes after the hyphen
+            const afterDash = title.split('-').slice(1).join('-');
+            const stateMatches = afterDash.match(/,\s*([A-Z]{2})(?:;|$)/g);
+            if (stateMatches) {
+              affectedStates = [...new Set(stateMatches.map(m => m.match(/([A-Z]{2})/)[1]))];
+            }
+          } catch (e) {
+            // fallback to areaDesc parsing
             affectedStates = (props.areaDesc || '').split(';').map(s => {
-              const match = s.trim().match(/^([A-Z]{2})/);
+              const match = s.trim().match(/,\s*([A-Z]{2})$/);
               return match ? match[1] : null;
             }).filter(Boolean);
-          } catch (e) {
-            // noop
           }
 
           // Create RawSignal
@@ -114,7 +121,7 @@ Deno.serve(async (req) => {
             affected_zip_codes: [],
             event_started_at: props.effective || new Date().toISOString(),
             event_ended_at: props.expires || null,
-            title: `${alertType} - ${props.areaDesc || 'Active'}`,
+            title,
             description: props.description || props.headline || '',
             source_url: props.url || 'https://api.weather.gov/alerts/active',
             raw_payload: props,
