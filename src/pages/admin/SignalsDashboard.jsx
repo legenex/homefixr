@@ -24,6 +24,7 @@ export default function SignalsDashboard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [scoreRange, setScoreRange] = useState("all");
+  const [dateRange, setDateRange] = useState("all");
   const [fetching, setFetching] = useState(false);
 
   const { data: signals = [], isLoading } = useQuery({
@@ -59,11 +60,33 @@ export default function SignalsDashboard() {
     }
   };
 
+  const getDateRange = () => {
+    const now = new Date();
+    switch (dateRange) {
+      case "today":
+        return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      case "7days":
+        return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      case "14days":
+        return new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+      case "30days":
+        return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+      case "6months":
+        return new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000);
+      default:
+        return new Date(0); // All time
+    }
+  };
+
   const filtered = signals.filter(s => {
     if (statusFilter !== "all" && s.status !== statusFilter) return false;
     if (scoreRange === "urgent" && s.composite_score < config.urgent_threshold_composite_score) return false;
     if (scoreRange === "high" && (s.composite_score < 70 || s.composite_score >= config.urgent_threshold_composite_score)) return false;
     if (scoreRange === "medium" && (s.composite_score < config.alert_threshold_composite_score || s.composite_score >= 70)) return false;
+    
+    const signalDate = new Date(s.created_date);
+    if (signalDate < getDateRange()) return false;
+    
     return true;
   });
 
@@ -146,6 +169,20 @@ export default function SignalsDashboard() {
             <SelectItem value="critical">URGENT (80+)</SelectItem>
             <SelectItem value="high">High (70-79)</SelectItem>
             <SelectItem value="medium">Medium (60-69)</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={dateRange} onValueChange={setDateRange}>
+          <SelectTrigger className="w-44 bg-white/5 border-white/10 text-white rounded-xl">
+            <SelectValue placeholder="All time" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All time</SelectItem>
+            <SelectItem value="today">Today</SelectItem>
+            <SelectItem value="7days">Last 7 days</SelectItem>
+            <SelectItem value="14days">Last 14 days</SelectItem>
+            <SelectItem value="30days">Last 30 days</SelectItem>
+            <SelectItem value="6months">Last 6 months</SelectItem>
           </SelectContent>
         </Select>
       </div>
