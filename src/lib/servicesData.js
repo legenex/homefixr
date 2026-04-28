@@ -383,6 +383,88 @@ export const SERVICES = {
       { q: "What's an emergency?", a: "Burst pipes, sewage backups, no hot water, major leaks. We prioritize these." },
       { q: "Is tankless worth it?", a: "For most homes yes — longer lifespan, endless hot water, energy savings over time." }
     ]
+  },
+  "solar": {
+    slug: "solar",
+    name: "Solar installation",
+    short: "Solar",
+    icon: "Sun",
+    description: "Go solar and save on your energy bills with a custom solar system designed for your home.",
+    features: ["Free solar consultation", "Custom system design", "Professional installation", "25-year warranty", "Federal tax credits"],
+    benefits: ["Cut energy bills by 50-80%", "Increase home value", "Reduce carbon footprint", "Energy independence"],
+    budgetOptions: [
+      { value: "15k-25k", label: "$15K–$25K" },
+      { value: "25k-50k", label: "$25K–$50K" },
+      { value: "50k-75k", label: "$50K–$75K" },
+      { value: "75k-100k", label: "$75K–$100K" },
+      { value: "100k-plus", label: "$100K+" }
+    ],
+    questions: [
+      { id: "sq_sol_1", label: "Do you own your home?", type: "single", options: ["Yes", "No"] },
+      { id: "sq_sol_2", label: "What's your roof condition?", type: "single", options: ["Excellent", "Good", "Fair", "Needs repair"] },
+      { id: "sq_sol_3", label: "Interested in battery storage?", type: "single", options: ["Yes", "No", "Maybe"] }
+    ],
+    faqs: [
+      { q: "How much do solar panels cost?", a: "Most systems cost $15K–$75K before tax credits. Federal ITC covers 30% of costs." },
+      { q: "How long do solar panels last?", a: "Most panels last 25+ years with 90%+ efficiency. Inverters typically last 10–15 years." },
+      { q: "Will panels work on my roof?", a: "Most homes qualify. South-facing roofs are ideal, but west/east-facing work too." },
+      { q: "Can I sell excess power back?", a: "Yes, through net metering in most states. You get credits for excess power." },
+      { q: "How is installation done?", a: "Typically 1–3 days. Our pros handle permits, interconnection, and inspections." }
+    ]
+  },
+  "hvac": {
+    slug: "hvac",
+    name: "HVAC service",
+    short: "HVAC",
+    icon: "Wind",
+    description: "Stay comfortable year-round with professional heating, cooling, and ventilation service.",
+    features: ["24/7 emergency service", "Energy-efficient units", "Smart thermostat integration", "10-year warranty", "Preventive maintenance"],
+    benefits: ["Stay comfortable all year", "Lower utility bills", "Better air quality", "Quiet operation"],
+    budgetOptions: [
+      { value: "3k-7k", label: "$3K–$7K" },
+      { value: "7k-12k", label: "$7K–$12K" },
+      { value: "12k-20k", label: "$12K–$20K" },
+      { value: "20k-plus", label: "$20K+" }
+    ],
+    questions: [
+      { id: "sq_hvac_1", label: "Is this for heating, cooling, or both?", type: "single", options: ["Heating", "Cooling", "Both"] },
+      { id: "sq_hvac_2", label: "What's your current system age?", type: "single", options: ["New", "5-10 years", "10-15 years", "15+ years"] },
+      { id: "sq_hvac_3", label: "Are you interested in upgrading to a smart thermostat?", type: "single", options: ["Yes", "No"] }
+    ],
+    faqs: [
+      { q: "How much does an HVAC system cost?", a: "New systems range $5K–$15K installed, depending on size and efficiency." },
+      { q: "How long should HVAC last?", a: "Modern systems last 15–20 years with proper maintenance." },
+      { q: "Do you offer emergency service?", a: "Yes — 24/7 emergency repairs for heating and cooling failures." },
+      { q: "What maintenance is needed?", a: "Change filters every 1–3 months, professional tune-up annually." },
+      { q: "Are rebates available?", a: "Yes — many states offer rebates for high-efficiency systems. We help with paperwork." }
+    ]
+  },
+  "pest-control": {
+    slug: "pest-control",
+    name: "Pest control",
+    short: "Pest control",
+    icon: "Bug",
+    description: "Protect your home from pests with safe, effective treatment from certified professionals.",
+    features: ["Free inspection", "Safe treatments", "Warranty guarantee", "Eco-friendly options", "Same-day service"],
+    benefits: ["Peace of mind", "Prevent damage", "Health and safety", "Protect investments"],
+    budgetOptions: [
+      { value: "200-500", label: "$200–$500" },
+      { value: "500-1k", label: "$500–$1K" },
+      { value: "1k-2k", label: "$1K–$2K" },
+      { value: "2k-plus", label: "$2K+" }
+    ],
+    questions: [
+      { id: "sq_pest_1", label: "What pest issue are you experiencing?", type: "multi", options: ["Ants", "Termites", "Roaches", "Spiders", "Rodents", "Bed bugs", "Other"] },
+      { id: "sq_pest_2", label: "Do you prefer eco-friendly treatments?", type: "single", options: ["Yes", "No", "No preference"] },
+      { id: "sq_pest_3", label: "Do you need ongoing monthly service?", type: "single", options: ["Yes", "One-time only", "Not sure"] }
+    ],
+    faqs: [
+      { q: "Is pest control safe for pets?", a: "Yes — we use pet-safe products and let you know before treatment." },
+      { q: "How often should I get pest control?", a: "Monthly is standard for prevention. One-time treatments also available." },
+      { q: "Do you guarantee results?", a: "Yes — if pests return between treatments, we retreat at no extra charge." },
+      { q: "What about termites?", a: "Termites are serious. Early detection saves thousands. Annual inspections recommended." },
+      { q: "Are your techs licensed?", a: "Yes — all technicians are licensed and insured." }
+    ]
   }
 };
 

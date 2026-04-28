@@ -14,7 +14,10 @@
         "roofing",
         "home-improvement",
         "electrical",
-        "plumbing"
+        "plumbing",
+        "solar",
+        "hvac",
+        "pest-control"
       ]
     },
     "status": {

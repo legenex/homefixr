@@ -11,7 +11,10 @@
         "roofing",
         "home-improvement",
         "electrical",
-        "plumbing"
+        "plumbing",
+        "solar",
+        "hvac",
+        "pest-control"
       ],
       "description": "Service requested"
     },
