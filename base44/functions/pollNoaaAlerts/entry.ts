@@ -123,12 +123,24 @@ Deno.serve(async (req) => {
 
           signalsIngested++;
 
+          // Run geocoding
+          try {
+            await base44.asServiceRole.functions.invoke('geocodeRawSignal', {
+              raw_signal_id: rawSignal.id
+            });
+          } catch (geoErr) {
+            console.warn(`Geocoding failed for ${rawSignal.id}: ${geoErr.message}`);
+          }
+
+          // Fetch updated signal with geo data
+          const updatedSignal = await base44.asServiceRole.entities.RawSignal.get(rawSignal.id);
+
           // Score the signal
-          const score = scoreSignal(rawSignal);
+          const score = scoreSignal(updatedSignal);
           
           // Create ScoredSignal directly
           await base44.asServiceRole.entities.ScoredSignal.create({
-            raw_signal_id: rawSignal.id,
+            raw_signal_id: updatedSignal.id,
             severity_score: score.severity,
             population_impact_score: score.population,
             wealth_score: score.wealth,
@@ -136,7 +148,7 @@ Deno.serve(async (req) => {
             competition_score: score.competition,
             composite_score: score.composite,
             recommended_campaigns: score.campaigns,
-            recommended_geo_targeting: rawSignal.affected_zip_codes || [],
+            recommended_geo_targeting: updatedSignal.affected_zip_codes || updatedSignal.affected_states || [],
             recommended_creative_angles: score.angles.slice(0, 5),
             recommended_buyer_types: score.buyers,
             recommended_daily_budget_low: score.budgetLow,
@@ -204,56 +216,134 @@ Deno.serve(async (req) => {
 function scoreSignal(rawSignal) {
   const type = rawSignal.event_type?.toLowerCase() || '';
   
-  // Severity (1-10)
+  // SEVERITY SCORING (1-10)
   let severity = 3;
   if (type.includes('tornado') || type.includes('hurricane') || type.includes('typhoon')) severity = 9;
   else if (type.includes('flood') || type.includes('flash flood')) severity = 8;
   else if (type.includes('winter storm') || type.includes('ice storm')) severity = 7;
-  else if (type.includes('earthquake') || type.includes('wildfire')) severity = 7;
+  else if (type.includes('earthquake')) severity = 7;
+  else if (type.includes('wildfire')) severity = 7;
   else if (type.includes('heat warning') || type.includes('excessive heat')) severity = 6;
-  else if (type.includes('wind') || type.includes('thunderstorm')) severity = 5;
+  else if (type.includes('severe thunderstorm') || type.includes('hail')) severity = 6;
+  else if (type.includes('wind') || type.includes('high wind')) severity = 5;
 
-  const population = 5; // Mock
-  const wealth = 6; // Mock
+  // POPULATION & WEALTH (mocked for now — would use Census/ACS data)
+  const population = 5;
+  const wealth = 6;
   
-  let urgency = 5;
-  if (type.includes('hail') || type.includes('tornado') || type.includes('flood')) urgency = 9;
-  else if (type.includes('hurricane') || type.includes('earthquake')) urgency = 8;
-  else if (type.includes('wildfire')) urgency = 6;
+  // URGENCY SCORING (1-10)
+  let urgency = 4;
+  if (type.includes('tornado') || type.includes('flood') || type.includes('flash flood')) urgency = 9;
+  else if (type.includes('hurricane') || type.includes('tropical storm')) urgency = 8;
+  else if (type.includes('earthquake') || type.includes('wildfire')) urgency = 7;
+  else if (type.includes('severe thunderstorm') || type.includes('hail')) urgency = 7;
+  else if (type.includes('winter storm') || type.includes('ice storm')) urgency = 6;
+  else if (type.includes('excessive heat') || type.includes('heat warning')) urgency = 5;
   
-  const competition = severity >= 8 ? 3 : 7; // Inverted
+  // COMPETITION (inverted: lower = better opportunity)
+  const competition = severity >= 8 ? 3 : severity >= 6 ? 5 : 7;
 
+  // COMPOSITE SCORE (weighted 1-100 scale)
   const composite = Math.round((severity * 0.3 + population * 0.25 + wealth * 0.2 + urgency * 0.15 + competition * 0.1) * 10);
 
+  // CAMPAIGN MAPPING (per spec)
   const campaigns = [];
-  if (type.includes('hail') || type.includes('tornado') || type.includes('severe')) campaigns.push('roofing', 'home-improvement');
-  if (type.includes('hurricane') || type.includes('tropical')) campaigns.push('roofing', 'home-improvement');
-  if (type.includes('flood') || type.includes('water')) campaigns.push('plumbing', 'home-improvement');
-  if (type.includes('wildfire') || type.includes('fire')) campaigns.push('home-improvement', 'hvac');
-  if (type.includes('heat')) campaigns.push('hvac');
-  if (type.includes('cold') || type.includes('freeze') || type.includes('winter')) campaigns.push('hvac', 'plumbing');
+  if (type.includes('flood warning') || type.includes('flash flood warning')) {
+    campaigns.push('plumbing', 'home-improvement');
+  }
+  if (type.includes('tornado warning') || type.includes('severe thunderstorm warning')) {
+    campaigns.push('roofing', 'home-improvement');
+  }
+  if (type.includes('hail') && severity >= 6) {
+    campaigns.push('roofing');
+  }
+  if (type.includes('hurricane warning') || type.includes('tropical storm warning')) {
+    campaigns.push('roofing', 'home-improvement', 'electrical');
+  }
+  if (type.includes('excessive heat warning') || type.includes('heat advisory')) {
+    campaigns.push('hvac');
+  }
+  if (type.includes('hard freeze warning') || type.includes('winter storm warning')) {
+    campaigns.push('plumbing', 'hvac');
+  }
+  if (type.includes('wildfire')) {
+    campaigns.push('hvac', 'home-improvement');
+  }
+  if (type.includes('earthquake') && severity >= 7) {
+    campaigns.push('home-improvement', 'plumbing');
+  }
+  
+  // Default if no match
   if (campaigns.length === 0) campaigns.push('home-improvement');
+  
+  // Remove duplicates
+  const uniqueCampaigns = [...new Set(campaigns)];
 
+  // CREATIVE ANGLES (3-5 per spec)
   const states = (rawSignal.affected_states || []).join('/') || 'your area';
   const angles = [];
   if (type.includes('hail') || type.includes('roof')) {
-    angles.push(`Hail damage in ${states}? Get free roof inspection & insurance claim help.`, `Licensed roofers available NOW for emergency assessment.`);
+    angles.push(
+      `🚨 Hail damage in ${states}? File insurance claims fast — deadlines matter.`,
+      `Free roof inspection for storm damage in ${states}.`,
+      `Hail damage? Licensed roofers ready for emergency assessment.`
+    );
   } else if (type.includes('flood')) {
-    angles.push(`Flood damage? Act fast — mold sets in quick. Get restoration quotes.`, `Water damage remediation available 24/7.`);
-  } else if (type.includes('hurricane')) {
-    angles.push(`Hurricane damage in ${states}? Emergency repairs available.`, `Storm damage? Licensed contractors ready for restoration.`);
+    angles.push(
+      `Flood damage in ${states}? Act fast — mold sets in quickly.`,
+      `Water damage remediation available 24/7 in affected areas.`,
+      `Licensed contractors ready for flood restoration.`
+    );
+  } else if (type.includes('hurricane') || type.includes('tropical')) {
+    angles.push(
+      `🌪️ Hurricane damage in ${states}? Emergency repairs available NOW.`,
+      `Storm damage to your home? Get contractor quotes today.`,
+      `Licensed pros ready for emergency home repairs.`
+    );
   } else if (type.includes('heat')) {
-    angles.push(`Heat wave? AC breakdown? Emergency HVAC service available.`, `Beat the heat — AC repair & upgrades from local pros.`);
-  } else if (type.includes('cold') || type.includes('freeze')) {
-    angles.push(`Frozen pipes? Emergency plumbing service available.`, `Winter storm? HVAC & heating pros standing by.`);
+    angles.push(
+      `Heat wave in ${states}? AC breakdown? Emergency HVAC service available.`,
+      `Beat the heat — AC repair & upgrades from local pros.`,
+      `Emergency cooling service available during heat emergencies.`
+    );
+  } else if (type.includes('cold') || type.includes('freeze') || type.includes('winter')) {
+    angles.push(
+      `❄️ Frozen pipes in ${states}? Emergency plumbing service available.`,
+      `Winter storm hitting? HVAC & heating pros standing by.`,
+      `Prepare for winter — heating system inspection available.`
+    );
   } else {
-    angles.push(`Emergency home repairs available in your area.`, `Licensed contractors ready to help with storm damage.`);
+    angles.push(
+      `Emergency home repairs needed in ${states}? Get free quotes.`,
+      `Licensed contractors ready to help with storm damage.`,
+      `Local pros available for damage assessment and repair.`
+    );
   }
 
-  const budgetLow = composite >= 85 ? 5000 : composite >= 70 ? 1500 : 500;
-  const budgetHigh = composite >= 85 ? 20000 : composite >= 70 ? 5000 : 1500;
+  // BUDGET RECOMMENDATIONS (per spec)
+  let budgetLow, budgetHigh;
+  if (composite >= 85) {
+    budgetLow = 5000;
+    budgetHigh = 20000;
+  } else if (composite >= 70) {
+    budgetLow = 1500;
+    budgetHigh = 5000;
+  } else {
+    budgetLow = 500;
+    budgetHigh = 1500;
+  }
 
-  const summary = `**${rawSignal.event_type}** in ${states}\n\nComposite Score: ${composite}/100\n\nAffected areas: ${(rawSignal.affected_zip_codes || []).slice(0, 5).join(', ')}`;
+  // BUYER TYPE MAPPING
+  const buyerMap = {
+    'roofing': 'roofing-contractors',
+    'hvac': 'hvac-networks',
+    'plumbing': 'plumbing-contractors',
+    'home-improvement': 'general-contractors',
+    'electrical': 'electrical-contractors'
+  };
+
+  const states_str = (rawSignal.affected_states || []).join(', ') || 'unknown';
+  const summary = `**${rawSignal.event_type}** in ${states_str}\n\n**Score:** ${composite}/100 | Severity ${severity}/10 | Urgency ${urgency}/10\n\nRecommended campaigns: ${uniqueCampaigns.join(', ')}\n\nAffected areas: ${(rawSignal.affected_zip_codes || []).slice(0, 5).join(', ') || 'Check state/county data'}`;
 
   return {
     severity,
@@ -262,9 +352,9 @@ function scoreSignal(rawSignal) {
     urgency,
     competition,
     composite,
-    campaigns,
-    angles,
-    buyers: campaigns.map(c => ({ roofing: 'roofing-contractors', hvac: 'hvac-networks', plumbing: 'plumbing-contractors', 'home-improvement': 'general-contractors' }[c] || c)).filter(Boolean),
+    campaigns: uniqueCampaigns,
+    angles: angles.slice(0, 5),
+    buyers: uniqueCampaigns.map(c => buyerMap[c] || c).filter(Boolean),
     budgetLow,
     budgetHigh,
     summary
