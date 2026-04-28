@@ -26,6 +26,8 @@ Deno.serve(async (req) => {
         api_endpoint: 'https://api.weather.gov/alerts/active',
         poll_interval_minutes: 30,
         is_enabled: true,
+        last_polled_at: null,
+        last_success_at: null,
         consecutive_failures: 0,
         circuit_breaker_open: false
       });
