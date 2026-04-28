@@ -1,0 +1,37 @@
+{
+  "name": "SignalRunLog",
+  "type": "object",
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "description": "Reference to SignalSource entity ID"
+    },
+    "run_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "run_finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signals_ingested": {
+      "type": "integer",
+      "default": 0
+    },
+    "signals_skipped_duplicate": {
+      "type": "integer",
+      "default": 0
+    },
+    "signals_failed": {
+      "type": "integer",
+      "default": 0
+    },
+    "error_summary": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "source_id",
+    "run_started_at"
+  ]
+}

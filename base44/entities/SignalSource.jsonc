@@ -1,0 +1,72 @@
+{
+  "name": "SignalSource",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Human-readable name (e.g. 'NOAA Weather Alerts')"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "weather_noaa",
+        "weather_nws",
+        "hail_reports",
+        "earthquake_usgs",
+        "wildfire_firms",
+        "hurricane_nhc",
+        "air_quality_epa",
+        "fema_disaster",
+        "power_outage",
+        "news_rss",
+        "custom"
+      ]
+    },
+    "api_endpoint": {
+      "type": "string",
+      "description": "URL of the API endpoint"
+    },
+    "api_key": {
+      "type": "string",
+      "description": "API key (masked in UI)"
+    },
+    "poll_interval_minutes": {
+      "type": "integer",
+      "default": 30,
+      "description": "How often to poll this source"
+    },
+    "is_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_polled_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_success_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_error_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_error_message": {
+      "type": "string"
+    },
+    "consecutive_failures": {
+      "type": "integer",
+      "default": 0
+    },
+    "circuit_breaker_open": {
+      "type": "boolean",
+      "default": false,
+      "description": "True after 5 consecutive failures; requires manual reset"
+    }
+  },
+  "required": [
+    "name",
+    "source_type",
+    "api_endpoint"
+  ]
+}

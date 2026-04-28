@@ -1,0 +1,45 @@
+{
+  "name": "SignalAlert",
+  "type": "object",
+  "properties": {
+    "scored_signal_id": {
+      "type": "string",
+      "description": "Reference to ScoredSignal entity ID"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "email",
+        "sms",
+        "slack",
+        "webhook"
+      ]
+    },
+    "recipient": {
+      "type": "string",
+      "description": "Email, phone, or webhook URL"
+    },
+    "sent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "delivery_status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "failed",
+        "bounced",
+        "queued"
+      ]
+    },
+    "payload_summary": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "scored_signal_id",
+    "alert_type",
+    "recipient",
+    "delivery_status"
+  ]
+}

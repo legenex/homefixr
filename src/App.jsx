@@ -23,6 +23,11 @@ import Integrations from '@/pages/admin/Integrations';
 import AdminAnalytics from '@/pages/admin/Analytics';
 import AdminSettings from '@/pages/admin/AdminSettings';
 import Distribution from '@/pages/admin/Distribution';
+import SignalsDashboard from '@/pages/admin/SignalsDashboard';
+import SignalDetail from '@/pages/admin/SignalDetail';
+import SignalBriefs from '@/pages/admin/SignalBriefs';
+import SignalBriefDetail from '@/pages/admin/SignalBriefDetail';
+import SignalsSettings from '@/pages/admin/SignalsSettings';
 import { Privacy, Terms, TCPA } from '@/pages/Legal';
 
 const AuthenticatedApp = () => {
@@ -61,6 +66,10 @@ const AuthenticatedApp = () => {
         <Route path="/admin/analytics" element={<AdminAnalytics />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
         <Route path="/admin/distribution" element={<Distribution />} />
+        <Route path="/admin/signals" element={<SignalsDashboard />} />
+        <Route path="/admin/signals/:id" element={<SignalDetail />} />
+        <Route path="/admin/signals/briefs/:id" element={<SignalBriefDetail />} />
+        <Route path="/admin/signals/briefs" element={<SignalBriefs />} />
       </Route>
 
       {/* Public site — uses main Navbar + Footer Layout */}

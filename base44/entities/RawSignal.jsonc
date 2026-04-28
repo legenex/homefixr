@@ -1,0 +1,82 @@
+{
+  "name": "RawSignal",
+  "type": "object",
+  "properties": {
+    "source_id": {
+      "type": "string",
+      "description": "Reference to SignalSource entity ID"
+    },
+    "source_event_id": {
+      "type": "string",
+      "description": "Unique ID from upstream source (for deduplication)"
+    },
+    "event_type": {
+      "type": "string",
+      "description": "e.g. 'Tornado Warning', 'Hail Report', 'Wildfire'"
+    },
+    "event_subtype": {
+      "type": "string"
+    },
+    "severity_raw": {
+      "type": "string",
+      "description": "Raw severity from source"
+    },
+    "affected_area_geojson": {
+      "type": "object",
+      "description": "GeoJSON polygon or bounding box of impact zone",
+      "additionalProperties": true
+    },
+    "affected_states": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Two-letter state codes"
+    },
+    "affected_counties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "affected_zip_codes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Populated by reverse-geocoding affected_area_geojson"
+    },
+    "event_started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "event_ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "raw_payload": {
+      "type": "object",
+      "description": "Original JSON from feed",
+      "additionalProperties": true
+    },
+    "ingested_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "source_id",
+    "source_event_id",
+    "event_type",
+    "title"
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "name": "CampaignBrief",
+  "type": "object",
+  "properties": {
+    "scored_signal_id": {
+      "type": "string",
+      "description": "Reference to ScoredSignal entity ID"
+    },
+    "brief_title": {
+      "type": "string"
+    },
+    "brief_summary": {
+      "type": "string",
+      "description": "Rich text summary"
+    },
+    "recommended_campaign_slug": {
+      "type": "string",
+      "description": "Primary campaign to run (roofing, hvac, etc.)"
+    },
+    "recommended_geo_targeting": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "ZIPs for targeting"
+    },
+    "recommended_creative_angles": {
+      "type": "string",
+      "description": "Rich text with 3-5 angles"
+    },
+    "recommended_buyer_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Buyer IDs to route leads to"
+    },
+    "recommended_budget_low": {
+      "type": "number",
+      "description": "Daily budget USD"
+    },
+    "recommended_budget_high": {
+      "type": "number",
+      "description": "Daily budget USD"
+    },
+    "recommended_quiz_modifications": {
+      "type": "string",
+      "description": "Suggested quiz question changes"
+    },
+    "recommended_landing_page_overrides": {
+      "type": "string",
+      "description": "Copy/messaging suggestions for LP"
+    },
+    "suggested_ad_copy_headlines": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "5 headline variations"
+    },
+    "suggested_ad_copy_descriptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "5 ad body variations"
+    },
+    "suggested_targeting_demographics": {
+      "type": "string",
+      "description": "Age, income, interests to target"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "approved",
+        "launched",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "approved_by": {
+      "type": "string",
+      "description": "User email"
+    },
+    "ai_generated_image_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Stage 2: populated by AI image generation"
+    },
+    "ai_generated_video_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Stage 2: populated by AI video generation"
+    },
+    "meta_campaign_id": {
+      "type": "string",
+      "description": "Stage 3: Meta Ads campaign ID after launch"
+    },
+    "google_campaign_id": {
+      "type": "string",
+      "description": "Stage 3: Google Ads campaign ID after launch"
+    },
+    "tiktok_campaign_id": {
+      "type": "string",
+      "description": "Stage 3: TikTok Ads campaign ID after launch"
+    },
+    "launched_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "launched_by": {
+      "type": "string",
+      "description": "User email"
+    }
+  },
+  "required": [
+    "scored_signal_id",
+    "brief_title",
+    "status"
+  ]
+}
