@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { base44 } from "@/api/base44Client";
 import { format } from "date-fns";
-import { Activity, AlertTriangle, MapPin, TrendingUp, CheckCircle } from "lucide-react";
+import { Activity, AlertTriangle, MapPin, TrendingUp, CheckCircle, RefreshCw, Zap } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 const SCORE_COLORS = {
   low: "bg-green-500/10 text-green-600 border-green-500/20",
@@ -24,6 +24,7 @@ export default function SignalsDashboard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [scoreRange, setScoreRange] = useState("all");
+  const [fetching, setFetching] = useState(false);
 
   const { data: signals = [], isLoading } = useQuery({
     queryKey: ["scored-signals"],
@@ -42,6 +43,21 @@ export default function SignalsDashboard() {
     mutationFn: ({ id, status }) => base44.asServiceRole.entities.ScoredSignal.update(id, { status, reviewed_at: new Date().toISOString() }),
     onSuccess: () => qc.invalidateQueries(["scored-signals"])
   });
+
+  const handleFetchAlerts = async () => {
+    setFetching(true);
+    try {
+      await base44.functions.invoke("pollNoaaAlerts", {});
+      // Refetch signals after a short delay to allow backend to process
+      setTimeout(() => {
+        qc.invalidateQueries(["scored-signals"]);
+        setFetching(false);
+      }, 1000);
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setFetching(false);
+    }
+  };
 
   const filtered = signals.filter(s => {
     if (statusFilter !== "all" && s.status !== statusFilter) return false;
@@ -70,9 +86,32 @@ export default function SignalsDashboard() {
   return (
     <div className="p-6 md:p-8 space-y-6">
       {/* Header + Stats */}
-      <div>
-        <h1 className="text-2xl font-semibold text-white">Signal Engine</h1>
-        <p className="text-white/40 text-sm mt-0.5">Monitor events & generate campaign briefs</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Signal Engine</h1>
+          <p className="text-white/40 text-sm mt-0.5">Monitor events & generate campaign briefs</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => qc.invalidateQueries(["scored-signals"])}
+            disabled={isLoading}
+            size="sm"
+            variant="outline"
+            className="text-white flex items-center gap-1.5"
+          >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            Refresh
+          </Button>
+          <Button
+            onClick={handleFetchAlerts}
+            disabled={fetching}
+            size="sm"
+            className="bg-secondary hover:bg-secondary/90 text-secondary-foreground flex items-center gap-1.5"
+          >
+            <Zap className="w-4 h-4" />
+            {fetching ? 'Fetching...' : 'Fetch NOAA Alerts'}
+          </Button>
+        </div>
       </div>
 
       {/* Stat Cards */}
