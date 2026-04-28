@@ -1,6 +1,6 @@
-// Central services config - one source of truth for all 7 services
+// Central services config - one source of truth for all 10 services
 import {
-  ChefHat, Bath, Layers, Home, Hammer, Zap, Droplets
+  ChefHat, Bath, Layers, Home, Hammer, Zap, Droplets, Sun, Wind, Bug
 } from "lucide-react";
 
 export const SERVICES = {
@@ -388,10 +388,24 @@ export const SERVICES = {
     slug: "solar",
     name: "Solar installation",
     short: "Solar",
-    icon: "Sun",
+    icon: Sun,
+    tagline: "Lower energy bills with solar designed for your home.",
     description: "Go solar and save on your energy bills with a custom solar system designed for your home.",
-    features: ["Free solar consultation", "Custom system design", "Professional installation", "25-year warranty", "Federal tax credits"],
-    benefits: ["Cut energy bills by 50-80%", "Increase home value", "Reduce carbon footprint", "Energy independence"],
+    heroImage: "https://images.unsplash.com/photo-1509391366360-2e938f1df0c7?w=1600&q=80",
+    includes: [
+      "Free solar consultation",
+      "Custom system design",
+      "Professional installation",
+      "25-year warranty",
+      "Federal tax credits",
+      "Performance monitoring"
+    ],
+    benefits: [
+      { title: "Cut energy bills", desc: "Save 50–80% on your monthly electric costs." },
+      { title: "Increase home value", desc: "Homes with solar sell faster and for more." },
+      { title: "30% tax credit", desc: "Federal Investment Tax Credit covers 30% of installation." },
+      { title: "25-year warranty", desc: "Panels backed by manufacturer warranties." }
+    ],
     budgetOptions: [
       { value: "15k-25k", label: "$15K–$25K" },
       { value: "25k-50k", label: "$25K–$50K" },
@@ -416,10 +430,24 @@ export const SERVICES = {
     slug: "hvac",
     name: "HVAC service",
     short: "HVAC",
-    icon: "Wind",
+    icon: Wind,
+    tagline: "Stay comfortable year-round with professional HVAC.",
     description: "Stay comfortable year-round with professional heating, cooling, and ventilation service.",
-    features: ["24/7 emergency service", "Energy-efficient units", "Smart thermostat integration", "10-year warranty", "Preventive maintenance"],
-    benefits: ["Stay comfortable all year", "Lower utility bills", "Better air quality", "Quiet operation"],
+    heroImage: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1600&q=80",
+    includes: [
+      "24/7 emergency service",
+      "Energy-efficient units",
+      "Smart thermostat integration",
+      "10-year warranty",
+      "Preventive maintenance",
+      "System replacement"
+    ],
+    benefits: [
+      { title: "Stay comfortable", desc: "Reliable heating and cooling all year." },
+      { title: "Lower utility bills", desc: "Energy-efficient systems save money." },
+      { title: "Emergency service", desc: "24/7 response for heating & cooling failures." },
+      { title: "Licensed technicians", desc: "Certified HVAC pros who know their craft." }
+    ],
     budgetOptions: [
       { value: "3k-7k", label: "$3K–$7K" },
       { value: "7k-12k", label: "$7K–$12K" },
@@ -443,10 +471,24 @@ export const SERVICES = {
     slug: "pest-control",
     name: "Pest control",
     short: "Pest control",
-    icon: "Bug",
+    icon: Bug,
+    tagline: "Protect your home from pests — safe and effective.",
     description: "Protect your home from pests with safe, effective treatment from certified professionals.",
-    features: ["Free inspection", "Safe treatments", "Warranty guarantee", "Eco-friendly options", "Same-day service"],
-    benefits: ["Peace of mind", "Prevent damage", "Health and safety", "Protect investments"],
+    heroImage: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1600&q=80",
+    includes: [
+      "Free pest inspection",
+      "Safe treatments",
+      "Warranty guarantee",
+      "Eco-friendly options",
+      "Same-day service",
+      "Ongoing prevention"
+    ],
+    benefits: [
+      { title: "Peace of mind", desc: "Protect your home from pest damage." },
+      { title: "Safe treatments", desc: "Pet-safe, eco-friendly options available." },
+      { title: "Guaranteed results", desc: "Pests return? We retreat at no charge." },
+      { title: "Licensed professionals", desc: "Certified technicians know pest behavior." }
+    ],
     budgetOptions: [
       { value: "200-500", label: "$200–$500" },
       { value: "500-1k", label: "$500–$1K" },
