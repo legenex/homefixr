@@ -32,6 +32,12 @@ Deno.serve(async (req) => {
     }
 
     const runStartedAt = new Date().toISOString();
+    
+    // Set last_polled_at immediately
+    await base44.asServiceRole.entities.SignalSource.update(source.id, {
+      last_polled_at: runStartedAt
+    });
+
     let signalsIngested = 0,
       skipped = 0,
       failed = 0;
@@ -178,9 +184,8 @@ Deno.serve(async (req) => {
         }
       }
 
-      // Update source
+      // Update source on success
       await base44.asServiceRole.entities.SignalSource.update(source.id, {
-        last_polled_at: new Date().toISOString(),
         last_success_at: new Date().toISOString(),
         consecutive_failures: 0
       });
@@ -194,7 +199,6 @@ Deno.serve(async (req) => {
       const breaker = newFailures >= 5;
 
       await base44.asServiceRole.entities.SignalSource.update(source.id, {
-        last_polled_at: new Date().toISOString(),
         last_error_at: new Date().toISOString(),
         last_error_message: e.message,
         consecutive_failures: newFailures,
