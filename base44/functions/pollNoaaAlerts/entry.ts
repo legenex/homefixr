@@ -123,6 +123,15 @@ Deno.serve(async (req) => {
 
           signalsIngested++;
 
+          // Score the signal
+          try {
+            await base44.asServiceRole.functions.invoke('scoreRawSignal', {
+              raw_signal_id: rawSignal.id
+            });
+          } catch (scoreErr) {
+            console.warn(`Scoring failed for ${rawSignal.id}: ${scoreErr.message}`);
+          }
+
           // Run geocoding
           try {
             await base44.asServiceRole.functions.invoke('geocodeRawSignal', {
