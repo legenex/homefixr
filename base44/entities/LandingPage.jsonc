@@ -1,0 +1,131 @@
+{
+  "name": "LandingPage",
+  "type": "object",
+  "properties": {
+    "slug": {
+      "type": "string",
+      "description": "kebab-case unique slug"
+    },
+    "path": {
+      "type": "string",
+      "description": "Full public path e.g. /lp/storm-roofing"
+    },
+    "title": {
+      "type": "string",
+      "description": "Internal label"
+    },
+    "service_slug": {
+      "type": "string",
+      "description": "Matching service slug from servicesData"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "draft"
+    },
+    "hero": {
+      "type": "object",
+      "properties": {
+        "eyebrow": {
+          "type": "string"
+        },
+        "headline": {
+          "type": "string"
+        },
+        "subheadline": {
+          "type": "string"
+        },
+        "cta_label": {
+          "type": "string"
+        }
+      }
+    },
+    "phone": {
+      "type": "string"
+    },
+    "trust_bullets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "stats": {
+      "type": "object",
+      "properties": {
+        "headline_value": {
+          "type": "string"
+        },
+        "headline_label": {
+          "type": "string"
+        },
+        "secondary_value": {
+          "type": "string"
+        },
+        "secondary_label": {
+          "type": "string"
+        },
+        "body_copy": {
+          "type": "string"
+        }
+      }
+    },
+    "story_blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "final_cta_label": {
+      "type": "string"
+    },
+    "quiz_id": {
+      "type": "string",
+      "description": "Reference to Quiz entity ID"
+    },
+    "seo_title": {
+      "type": "string"
+    },
+    "seo_description": {
+      "type": "string"
+    },
+    "og_image": {
+      "type": "string"
+    },
+    "tcpa_disclosure": {
+      "type": "string"
+    },
+    "webhook_endpoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Webhook URLs for lead delivery (future use)"
+    }
+  },
+  "required": [
+    "slug",
+    "path",
+    "title",
+    "status"
+  ]
+}

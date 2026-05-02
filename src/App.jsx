@@ -28,6 +28,9 @@ import SignalDetail from '@/pages/admin/SignalDetail';
 import SignalBriefs from '@/pages/admin/SignalBriefs';
 import SignalBriefDetail from '@/pages/admin/SignalBriefDetail';
 import SignalsSettings from '@/pages/admin/SignalsSettings';
+import LandingPages from '@/pages/admin/LandingPages';
+import LandingPageEditor from '@/pages/admin/LandingPageEditor';
+import PublicLandingPage from '@/pages/PublicLandingPage';
 import { Privacy, Terms, TCPA } from '@/pages/Legal';
 
 const AuthenticatedApp = () => {
@@ -55,6 +58,9 @@ const AuthenticatedApp = () => {
       {/* Quiz — standalone chrome */}
       <Route path="/quiz" element={<Quiz />} />
 
+      {/* Public landing pages — standalone (no site nav) */}
+      <Route path="/lp/*" element={<PublicLandingPage />} />
+
       {/* Admin — standalone with own dark layout + auth guard */}
       <Route element={<AdminGuard />}>
         <Route path="/admin" element={<AdminDashboard />} />
@@ -70,6 +76,9 @@ const AuthenticatedApp = () => {
         <Route path="/admin/signals/:id" element={<SignalDetail />} />
         <Route path="/admin/signals/briefs/:id" element={<SignalBriefDetail />} />
         <Route path="/admin/signals/briefs" element={<SignalBriefs />} />
+        <Route path="/admin/signals/settings" element={<SignalsSettings />} />
+        <Route path="/admin/landing-pages" element={<LandingPages />} />
+        <Route path="/admin/landing-pages/:id" element={<LandingPageEditor />} />
       </Route>
 
       {/* Public site — uses main Navbar + Footer Layout */}

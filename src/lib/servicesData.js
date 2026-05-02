@@ -1,6 +1,7 @@
 // Central services config - one source of truth for all 10 services
 import {
-  ChefHat, Bath, Layers, Home, Hammer, Zap, Droplets, Sun, Wind, Bug
+  ChefHat, Bath, Layers, Home, Hammer, Zap, Droplets, Sun, Wind, Bug,
+  CloudHail, Snowflake, SunMedium, Waves
 } from "lucide-react";
 
 export const SERVICES = {
@@ -506,6 +507,238 @@ export const SERVICES = {
       { q: "Do you guarantee results?", a: "Yes — if pests return between treatments, we retreat at no extra charge." },
       { q: "What about termites?", a: "Termites are serious. Early detection saves thousands. Annual inspections recommended." },
       { q: "Are your techs licensed?", a: "Yes — all technicians are licensed and insured." }
+    ]
+  },
+
+  // ── 2026 Summer Campaigns ────────────────────────────────────────────────
+  "storm-roofing": {
+    slug: "storm-roofing",
+    name: "Storm-Damage Roofing",
+    short: "Storm Roofing",
+    icon: CloudHail,
+    category: "roofing",
+    peak_months: "May–September",
+    tagline: "Storm Damage in Your Area? Get a Free Roof Inspection.",
+    description: "Recent severe weather may have caused hidden damage your insurance can cover. Licensed local contractors inspect within 48 hours — no cost, no obligation.",
+    heroImage: "https://images.unsplash.com/photo-1632759145351-1d76b6e1dff1?w=1600&q=80",
+    hero_headline: "Storm Damage in Your Area? Get a Free Roof Inspection",
+    hero_subheadline: "Recent severe weather may have caused hidden damage your insurance can cover. Licensed local contractors inspect within 48 hours — no cost, no obligation.",
+    cta_label: "Get My Free Inspection",
+    includes: [
+      "Free 20-minute inspection",
+      "Insurance claim documentation",
+      "Repair or full replacement quotes",
+      "Licensed & insured contractors",
+      "Results within 48 hours",
+      "No cost, no obligation"
+    ],
+    benefits: [
+      { title: "Free inspection", desc: "Licensed contractors inspect your roof at no charge." },
+      { title: "Insurance assistance", desc: "We help document damage for your insurance claim." },
+      { title: "48-hour turnaround", desc: "Inspections completed within 48 hours of your request." },
+      { title: "No obligation", desc: "Get the facts before deciding on any repairs." }
+    ],
+    budgetOptions: [
+      { value: "insurance", label: "Insurance covered", qualified: true },
+      { value: "under-3k", label: "Under $3,000", qualified: false },
+      { value: "3k-10k", label: "$3,000 – $10,000", qualified: true },
+      { value: "10k-plus", label: "$10,000+", qualified: true }
+    ],
+    questions: [
+      { id: "homeowner", label: "Are you the homeowner?", type: "single", options: ["Yes", "No (renter)", "Yes, co-owner with spouse"] },
+      { id: "zip", label: "What is your ZIP code?", type: "zip" },
+      { id: "roof_age", label: "When did you last have your roof inspected or replaced?", type: "single", options: ["Less than 1 year ago", "1–3 years ago", "3–10 years ago", "More than 10 years ago", "Never"] }
+    ],
+    faqs: [
+      { q: "Is the inspection really free?", a: "Yes — licensed local contractors offer free inspections to homeowners with potential storm damage. They earn revenue from repairs, not inspections." },
+      { q: "Will my insurance cover the damage?", a: "Most homeowner policies cover storm damage. Our contractors help you document and file your claim." },
+      { q: "How quickly can I get an inspection?", a: "Most inspections happen within 24–48 hours of your request." },
+      { q: "What if no damage is found?", a: "No charge, no obligation. You get peace of mind and documentation that your roof is intact." }
+    ]
+  },
+
+  "hvac-emergency": {
+    slug: "hvac-emergency",
+    name: "HVAC Repair & Replacement",
+    short: "HVAC Emergency",
+    icon: Snowflake,
+    category: "hvac",
+    peak_months: "May–September",
+    tagline: "AC Not Working? Same-Day Service Near You.",
+    description: "Licensed local HVAC pros standing by for same-day diagnosis and repair. Most repairs completed in 1–2 hours. Replacement quotes from $99/month with 0% financing.",
+    heroImage: "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1600&q=80",
+    hero_headline: "AC Not Working? Same-Day Service Near You",
+    hero_subheadline: "Licensed local HVAC pros standing by for same-day diagnosis and repair. Most repairs completed in 1–2 hours. Replacement quotes from $99/month with 0% financing.",
+    cta_label: "Get Same-Day Service",
+    includes: [
+      "Same-day diagnostic & repair",
+      "Full system replacement",
+      "0% financing available",
+      "Licensed & insured technicians",
+      "Upfront pricing — no surprises",
+      "Emergency same-day service"
+    ],
+    benefits: [
+      { title: "Same-day service", desc: "Licensed HVAC pros available for same-day diagnosis and repair." },
+      { title: "Fast repairs", desc: "Most repairs completed in 1–2 hours." },
+      { title: "0% financing", desc: "Replace your system from $99/month with 0% down financing." },
+      { title: "Upfront pricing", desc: "No surprises — honest quotes before any work begins." }
+    ],
+    budgetOptions: [
+      { value: "under-1k", label: "Under $1,000 (repair)", qualified: true },
+      { value: "3k-7k", label: "$3K–$7K (replacement)", qualified: true },
+      { value: "7k-15k", label: "$7K–$15K (premium)", qualified: true },
+      { value: "15k-plus", label: "$15K+", qualified: true }
+    ],
+    questions: [
+      { id: "issue", label: "What's happening with your AC?", type: "single", options: ["Not cooling at all", "Working but barely / strange sounds", "Looking to replace old system", "General maintenance / tune-up"] },
+      { id: "homeowner", label: "Are you the homeowner?", type: "single", options: ["Yes", "Renter"] },
+      { id: "zip", label: "What is your ZIP code?", type: "zip" },
+      { id: "age", label: "How old is your current AC system?", type: "single", options: ["Less than 5 years", "5–10 years", "More than 10 years", "Don't know"] }
+    ],
+    faqs: [
+      { q: "Can you really get same-day service?", a: "Yes — our network of local HVAC contractors offers same-day service for most issues during business hours." },
+      { q: "How much does AC repair typically cost?", a: "Most repairs run $150–$600. Full replacements range $3,000–$12,000 depending on size and efficiency." },
+      { q: "Is financing available?", a: "Yes — most contractors offer 0% financing for qualified buyers on new system installations." },
+      { q: "Should I repair or replace?", a: "If your system is over 10 years old and the repair exceeds 50% of replacement cost, replacement usually makes more financial sense." }
+    ]
+  },
+
+  "pest-control-summer": {
+    slug: "pest-control-summer",
+    name: "Pest Control (Mosquito, Termite & General)",
+    short: "Pest Control",
+    icon: Bug,
+    category: "pest-control",
+    peak_months: "April–September",
+    tagline: "A Mosquito-Free Backyard This Summer.",
+    description: "Licensed local specialists treat your entire yard for the season. EPA-registered, kid + pet safe. First treatment free.",
+    heroImage: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=1600&q=80",
+    hero_headline: "A Mosquito-Free Backyard This Summer",
+    hero_subheadline: "Licensed local specialists treat your entire yard for the season. EPA-registered, kid + pet safe. First treatment free.",
+    cta_label: "Get My Free Treatment",
+    includes: [
+      "Full-yard mosquito treatment",
+      "21-day lasting protection",
+      "EPA-registered, kid + pet safe",
+      "Termite & general pest service",
+      "Money-back guarantee",
+      "First treatment free"
+    ],
+    benefits: [
+      { title: "EPA-registered", desc: "Safe, EPA-registered treatments for your family and pets." },
+      { title: "21-day protection", desc: "One treatment lasts 21 days — use your yard all summer." },
+      { title: "Money-back guarantee", desc: "If you're not satisfied, we'll make it right." },
+      { title: "First treatment free", desc: "Local specialists are offering a free first treatment this season." }
+    ],
+    budgetOptions: [
+      { value: "200-500", label: "$200–$500", qualified: true },
+      { value: "500-1k", label: "$500–$1K", qualified: true },
+      { value: "1k-2k", label: "$1K–$2K", qualified: true },
+      { value: "2k-plus", label: "$2K+", qualified: true }
+    ],
+    questions: [
+      { id: "pest", label: "What pest are you dealing with?", type: "single", options: ["Mosquitoes (outdoor)", "Termites", "Bed bugs", "Roaches/ants/general", "Rodents", "Multiple"] },
+      { id: "homeowner", label: "Are you the homeowner or renter?", type: "single", options: ["Homeowner", "Renter (with permission to treat)", "Renter (no permission)"] },
+      { id: "zip", label: "What is your ZIP code?", type: "zip" }
+    ],
+    faqs: [
+      { q: "Is the first treatment really free?", a: "Yes — local specialists are offering free first treatments during the summer promotion. Ask about ongoing seasonal packages." },
+      { q: "Are the treatments safe for kids and pets?", a: "Yes — all treatments are EPA-registered and formulated to be safe for children and pets after a brief drying period." },
+      { q: "How long does a treatment last?", a: "Standard treatments last 21 days. Seasonal packages provide coverage all summer." },
+      { q: "Do you treat for termites too?", a: "Yes — our network includes specialists for mosquitoes, termites, bed bugs, rodents, and general pest control." }
+    ]
+  },
+
+  "solar-summer": {
+    slug: "solar-summer",
+    name: "Solar + Battery Backup",
+    short: "Solar",
+    icon: SunMedium,
+    category: "solar",
+    peak_months: "Year-round (peak May–September)",
+    tagline: "See If Your Home Qualifies for Solar.",
+    description: "Eliminate your electric bill with $0-down solar — average savings $2,400/year. The 30% federal tax credit makes 2026 the best year to install.",
+    heroImage: "https://images.unsplash.com/photo-1509391366360-2e938f1df0c7?w=1600&q=80",
+    hero_headline: "See If Your Home Qualifies for Solar",
+    hero_subheadline: "Homeowners are eliminating their electric bills with $0-down solar — and saving an average of $2,400/year. The 30% federal tax credit makes 2026 the best year to install.",
+    cta_label: "Check My Home's Solar Potential",
+    includes: [
+      "$0-down financing available",
+      "30% federal tax credit",
+      "Free custom savings quote",
+      "Battery backup options",
+      "25-year equipment warranty",
+      "Local licensed installers"
+    ],
+    benefits: [
+      { title: "30% tax credit", desc: "Federal Investment Tax Credit covers 30% of installation through 2032." },
+      { title: "$0-down financing", desc: "Monthly payment typically less than your current electric bill." },
+      { title: "$2,400/yr savings", desc: "Average annual savings for qualifying homeowners." },
+      { title: "25-year warranty", desc: "Premium panels and equipment backed by manufacturer warranties." }
+    ],
+    budgetOptions: [
+      { value: "15k-25k", label: "$15K–$25K", qualified: true },
+      { value: "25k-50k", label: "$25K–$50K", qualified: true },
+      { value: "50k-plus", label: "$50K+", qualified: true }
+    ],
+    questions: [
+      { id: "ownership", label: "Do you own or rent your home?", type: "single", options: ["Own", "Rent"] },
+      { id: "bill", label: "Approximately what is your average monthly electric bill?", type: "single", options: ["Under $80", "$80–$150", "$150–$250", "More than $250"] },
+      { id: "zip", label: "What is your ZIP code?", type: "zip" },
+      { id: "roof_age", label: "What is the approximate age of your roof?", type: "single", options: ["Less than 5 years", "5–15 years", "More than 15 years", "Recently replaced"] }
+    ],
+    faqs: [
+      { q: "What is the 30% federal tax credit?", a: "The Investment Tax Credit (ITC) lets you deduct 30% of your solar installation cost from your federal taxes. It's available through 2032." },
+      { q: "How does $0-down financing work?", a: "Most installers offer solar loans where your monthly payment is less than your current electric bill — so you save from day one." },
+      { q: "How much can I really save?", a: "Most qualifying homeowners save $1,500–$3,500/year. Your free quote shows your specific savings based on your roof and utility rates." },
+      { q: "What if my roof needs replacement?", a: "We can connect you with contractors who offer roofing + solar combos. Often covered in one financing package." }
+    ]
+  },
+
+  "pool-installation": {
+    slug: "pool-installation",
+    name: "Pool Design & Installation",
+    short: "Pool",
+    icon: Waves,
+    category: "pool",
+    peak_months: "April–July",
+    tagline: "Get a Pool by Summer — Free Design + Quote.",
+    description: "Local licensed pool builders are booking spring/summer 2026 installs now. Custom design consultation is free. Financing from $300/month.",
+    heroImage: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1600&q=80",
+    hero_headline: "Get a Pool by Summer — Free Design + Quote",
+    hero_subheadline: "Local licensed pool builders are booking spring/summer 2026 installs now. Custom design consultation is free. Most pools install in 6–10 weeks. Financing from $300/month with 0% down options.",
+    cta_label: "Get My Free Pool Quote",
+    includes: [
+      "Free 3D design consultation",
+      "In-ground & fiberglass options",
+      "0% down financing available",
+      "6–10 week installation",
+      "25-year structural warranty",
+      "Up to 3 competing builder quotes"
+    ],
+    benefits: [
+      { title: "Free design", desc: "Licensed builders provide free 3D design consultations." },
+      { title: "0% down financing", desc: "Financing from $300/month with 0% down options." },
+      { title: "Fast install", desc: "Most pools installed in 6–10 weeks." },
+      { title: "25-year warranty", desc: "Structural warranties backed by licensed local builders." }
+    ],
+    budgetOptions: [
+      { value: "35k-60k", label: "$35K–$60K", qualified: true },
+      { value: "60k-100k", label: "$60K–$100K", qualified: true },
+      { value: "100k-plus", label: "$100K+", qualified: true }
+    ],
+    questions: [
+      { id: "homeowner", label: "Do you own your home?", type: "single", options: ["Yes", "Renter"] },
+      { id: "zip", label: "What is your ZIP code?", type: "zip" },
+      { id: "pool_type", label: "What type of pool are you considering?", type: "single", options: ["In-ground (gunite/concrete)", "In-ground (fiberglass)", "Above-ground", "Not sure / open to options"] },
+      { id: "timeline", label: "What's your timeline for installation?", type: "single", options: ["Within 3 months", "3–6 months", "6–12 months", "More than a year / just exploring"] }
+    ],
+    faqs: [
+      { q: "How much does a pool cost?", a: "In-ground pools range from $35,000 (basic) to $150,000+ (luxury). Most homeowners build for $50,000–$85,000." },
+      { q: "How long does installation take?", a: "Most pools are installed in 6–10 weeks from permit approval. Gunite/concrete pools take slightly longer than fiberglass." },
+      { q: "Is financing available?", a: "Yes — most builders offer 0% down financing from around $300/month. The equity stays in your home." },
+      { q: "Will a pool increase my home value?", a: "Yes — pools add an average of 7–15% to home value in warm climates, and are a major selling feature." }
     ]
   }
 };

@@ -1,0 +1,64 @@
+{
+  "name": "LPSubmission",
+  "type": "object",
+  "properties": {
+    "quiz_id": {
+      "type": "string"
+    },
+    "landing_page_id": {
+      "type": "string"
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "tcpa_consent_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "user_agent": {
+      "type": "string"
+    },
+    "referrer": {
+      "type": "string"
+    },
+    "utm_source": {
+      "type": "string"
+    },
+    "utm_medium": {
+      "type": "string"
+    },
+    "utm_campaign": {
+      "type": "string"
+    },
+    "utm_content": {
+      "type": "string"
+    },
+    "submitted_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "qualified": {
+      "type": "boolean"
+    },
+    "disqualification_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "landing_page_id",
+    "submitted_at"
+  ]
+}

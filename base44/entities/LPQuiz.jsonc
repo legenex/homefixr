@@ -1,0 +1,72 @@
+{
+  "name": "LPQuiz",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "single",
+              "multi",
+              "text",
+              "phone",
+              "email",
+              "zip"
+            ]
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "disqualifies": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "required": {
+            "type": "boolean",
+            "default": true
+          },
+          "helper_text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "success_route": {
+      "type": "string",
+      "default": ""
+    },
+    "tcpa_required": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name"
+  ]
+}
